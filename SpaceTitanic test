@@ -1,0 +1,36 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+import numpy as np
+from sklearn import tree
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import LabelEncoder
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', None)
+
+le = LabelEncoder()
+df = pd.read_csv(r'C:\Users\Welcome\PycharmProjects\Kaggle\Data\spaceship-titanic\train.csv')
+
+# print(df.shape)
+df = df.drop('Name', axis=1)
+df = df.drop('PassengerId', axis=1)
+df = df.drop('Cabin', axis=1)
+df = df.dropna()
+df['Destination'] = LabelEncoder().fit_transform(df['Destination'])
+df['HomePlanet'] = LabelEncoder().fit_transform(df['HomePlanet'])
+df['CryoSleep'] = LabelEncoder().fit_transform(df['CryoSleep'])
+df['VIP'] = LabelEncoder().fit_transform(df['VIP'])
+df['Transported'] = LabelEncoder().fit_transform(df['Transported'])
+
+X = df.drop('Transported', axis=1)
+y = df['Transported']
+# print(df.head())
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+model = KNeighborsClassifier()
+model.fit(X_train, y_train)
+prediction = model.predict(X_test)
+accuracy = accuracy_score(y_test, prediction)
+print(accuracy)
+
